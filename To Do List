@@ -1,0 +1,164 @@
+1.HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="container">
+    <div class="todo-app">
+      <h2>To-Do List <img src="icon.png" alt=""></h2>
+      <div class="row">
+        <input type="text" id="input-box" placeholder="Add your text">
+        <button onclick="action()">Add</button>
+      </div>
+      <ul id="list-container">
+       
+      </ul>
+    </div>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>
+
+
+2. CSS
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.container{
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg,#153677,#4e085f);
+  padding: 10px;
+}
+.todo-app{
+  width: 100%;
+  max-width: 540px;
+  background: #fff;
+  margin: 100px auto 20px;
+  padding: 40px 30px 70px;
+  border-radius: 10px;
+}
+.todo-app h2{
+  color: #002765;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.todo-app h2 img{
+  width: 30px;
+  margin-left: 10px;
+}
+.row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #edeef0;
+  border-radius: 30px;
+  padding-left: 20px;
+  margin-bottom: 25px;
+}
+input{
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 10px;
+  font-weight: 14px;
+}
+button{
+  border: none;
+  outline: none;
+  padding: 16px 50px;
+  background: #ff5945;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 40px;
+}
+ul li{
+  list-style: none;
+  font-size: 17px;
+  padding: 12px 8px 12px 50px;
+  /* by user select:none we cannot select the element by double clicking on it */
+  user-select: none;       
+  cursor: pointer;
+  position: relative;
+}
+ul li::before{
+  content: '';
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background-image: url(unchecked.png);
+  background-size: cover;
+  background-position: center;
+  top: 12px;
+  left: 8px;
+}
+ul li.checked{
+  color: #555;
+  text-decoration: line-through;
+}
+.checked::before{
+  background-image: url(checked.png);
+}
+
+ul li span{
+  position: absolute;
+  right: 0;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: grey;
+  text-align: center;
+}
+
+
+
+3.JS
+let inputBox = document.getElementById('input-box')
+let listContainer = document.getElementById('list-container')
+
+
+function action(){
+  if(inputBox.value === ''){
+    alert('Please Enter something')
+  } else {
+    let li = document.createElement("li");
+    li.innerHTML = inputBox.value
+    listContainer.appendChild(li)
+    let span = document.createElement('span')
+    span.innerHTML = 'x'
+    li.appendChild(span)
+  }
+  inputBox.value = ''
+  savedata()
+}
+
+listContainer.addEventListener('click',function(e){
+ if(e.target.tagName === 'LI'){
+  e.target.classList.toggle("checked")
+  savedata()
+ } else if( e.target.tagName === 'SPAN') {
+  e.target.parentElement.remove();
+  savedata()
+ }
+})
+
+function savedata() {
+  localStorage.setItem('data',listContainer.innerHTML)
+}
+function showdata(){
+  listContainer.innerHTML = localStorage.getItem('data')
+}
+showdata()
